@@ -6,9 +6,9 @@ import com.example.library.jdbc.model.Tutorial;
 
 public interface TutorialRepository {
 	
-	  int save(Tutorial book);
+	  void save(Tutorial book);
 
-	  int update(Tutorial book);
+	  void update(Tutorial book);
 
 	  Tutorial findById(Long id);
 
@@ -19,7 +19,5 @@ public interface TutorialRepository {
 	  List<Tutorial> findByPublished(boolean published);
 
 	  List<Tutorial> findByTitleContaining(String title);
-
-	  int deleteAll();
 
 }
