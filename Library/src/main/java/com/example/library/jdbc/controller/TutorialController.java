@@ -3,7 +3,6 @@ package com.example.library.jdbc.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,19 +23,22 @@ import com.example.library.jdbc.repository.TutorialRepository;
 @RestController
 @RequestMapping("/api")
 public class TutorialController {
-	
-	@Autowired
-	  TutorialRepository tutorialRepository;
+
+	  private final TutorialRepository tutorialRepository;
+
+	  public TutorialController(TutorialRepository tutorialRepository) {
+		  this.tutorialRepository = tutorialRepository;
+	  }
 
 	  @GetMapping("/tutorials")
 	  public ResponseEntity<List<Tutorial>> getAllTutorials(@RequestParam(required = false) String title) {
 	    try {
-	      List<Tutorial> tutorials = new ArrayList<Tutorial>();
+	      List<Tutorial> tutorials = new ArrayList<>();
 
 	      if (title == null)
-	        tutorialRepository.findAll().forEach(tutorials::add);
+              tutorials.addAll(tutorialRepository.findAll());
 	      else
-	        tutorialRepository.findByTitleContaining(title).forEach(tutorials::add);
+              tutorials.addAll(tutorialRepository.findByTitleContaining(title));
 
 	      if (tutorials.isEmpty()) {
 	        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -65,8 +67,6 @@ public class TutorialController {
 	      tutorialRepository.save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(), tutorial.isPublished()));
 	      return new ResponseEntity<>("Tutorial was created successfully.", HttpStatus.CREATED);
 	    } catch (Exception e) {
-			e.printStackTrace();
-
 			return new ResponseEntity<>(
 					e.getClass().getName() + " : " + e.getMessage(),
 					HttpStatus.INTERNAL_SERVER_ERROR);
@@ -101,17 +101,6 @@ public class TutorialController {
 	    } catch (Exception e) {
 	      return new ResponseEntity<>("Cannot delete tutorial.", HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
-	  }
-
-	  @DeleteMapping("/tutorials")
-	  public ResponseEntity<String> deleteAllTutorials() {
-	    try {
-	      int numRows = tutorialRepository.deleteAll();
-	      return new ResponseEntity<>("Deleted " + numRows + " Tutorial(s) successfully.", HttpStatus.OK);
-	    } catch (Exception e) {
-	      return new ResponseEntity<>("Cannot delete tutorials.", HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
-
 	  }
 
 	  @GetMapping("/tutorials/published")
