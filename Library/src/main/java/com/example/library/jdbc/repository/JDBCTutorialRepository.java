@@ -18,20 +18,20 @@ public class JDBCTutorialRepository implements TutorialRepository {
 
 	  @Override
 	  public int save(Tutorial tutorial) {
-	    return jdbcTemplate.update("INSERT INTO tutorials (title, description, published) VALUES(?,?,?)",
+	    return jdbcTemplate.update("INSERT INTO tutorial (title, description, published) VALUES(?,?,?)",
 	        new Object[] { tutorial.getTitle(), tutorial.getDescription(), tutorial.isPublished() });
 	  }
 
 	  @Override
 	  public int update(Tutorial tutorial) {
-	    return jdbcTemplate.update("UPDATE tutorials SET title=?, description=?, published=? WHERE id=?",
+	    return jdbcTemplate.update("UPDATE tutorial SET title=?, description=?, published=? WHERE id=?",
 	        new Object[] { tutorial.getTitle(), tutorial.getDescription(), tutorial.isPublished(), tutorial.getId() });
 	  }
 
 	  @Override
 	  public Tutorial findById(Long id) {
 	    try {
-	      Tutorial tutorial = jdbcTemplate.queryForObject("SELECT * FROM tutorials WHERE id=?",
+	      Tutorial tutorial = jdbcTemplate.queryForObject("SELECT * FROM tutorial WHERE id=?",
 	          BeanPropertyRowMapper.newInstance(Tutorial.class), id);
 
 	      return tutorial;
@@ -42,17 +42,17 @@ public class JDBCTutorialRepository implements TutorialRepository {
 
 	  @Override
 	  public int deleteById(Long id) {
-	    return jdbcTemplate.update("DELETE FROM tutorials WHERE id=?", id);
+	    return jdbcTemplate.update("DELETE FROM tutorial WHERE id=?", id);
 	  }
 
 	  @Override
 	  public List<Tutorial> findAll() {
-	    return jdbcTemplate.query("SELECT * from tutorials", BeanPropertyRowMapper.newInstance(Tutorial.class));
+	    return jdbcTemplate.query("SELECT * from tutorial", BeanPropertyRowMapper.newInstance(Tutorial.class));
 	  }
 
 	  @Override
 	  public List<Tutorial> findByPublished(boolean published) {
-	    return jdbcTemplate.query("SELECT * from tutorials WHERE published=?",
+	    return jdbcTemplate.query("SELECT * from tutorial WHERE published=?",
 	        BeanPropertyRowMapper.newInstance(Tutorial.class), published);
 	  }
 
@@ -65,7 +65,7 @@ public class JDBCTutorialRepository implements TutorialRepository {
 
 	  @Override
 	  public int deleteAll() {
-	    return jdbcTemplate.update("DELETE from tutorials");
+	    return jdbcTemplate.update("DELETE from tutorial");
 	  }
 
 }
